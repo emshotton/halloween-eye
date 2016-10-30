@@ -1,0 +1,30 @@
+{
+  "name": "halloween-eye",
+  "version": "1.0.0",
+  "description": "Object tracking giant eye.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/reload/bin/reload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MatthewShotton/halloween-eye.git"
+  },
+  "keywords": [
+    "giant",
+    "halloween",
+    "eye"
+  ],
+  "author": "Matthew Shotton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MatthewShotton/halloween-eye/issues"
+  },
+  "homepage": "https://github.com/MatthewShotton/halloween-eye#readme",
+  "dependencies": {
+    "oflow": "^0.2.2"
+  },
+  "devDependencies": {
+    "reload": "^1.0.1"
+  }
+}
