@@ -1,40 +1,51 @@
 window.onload = function() {
 	let canvas = document.getElementById('canvas');
 	let ctx = canvas.getContext("2d");
-
 	let flow = new oflow.WebCamFlow();
-	let numBins = 6;
-	let movement = new Array();
+
+	let x = 0;
+	let timeout = 40;
+	let timeoutCount = 0;
+	let previousValue = 0;
+
+
+	let imageFilenames = [
+		"./assets/images/c00.png",
+		"./assets/images/c01.png",
+		"./assets/images/c02.png",
+		"./assets/images/c03.png",
+		"./assets/images/c04.png",
+		"./assets/images/c05.png",
+		"./assets/images/c06.png",
+		"./assets/images/c07.png",
+		"./assets/images/c08.png",
+		"./assets/images/c09.png",
+		"./assets/images/c10.png",
+		"./assets/images/c11.png",
+		"./assets/images/c12.png",
+		"./assets/images/c13.png",
+		"./assets/images/c14.png",
+		"./assets/images/c15.png",
+		"./assets/images/c16.png"
+	];
+
+	let images = [];
+	for (let filename of imageFilenames){
+		let image = new Image();
+		image.src = filename;
+		images.push(image);
+	}
+
+
+	let closedEye = new Image();
+	closedEye.src = "./assets/images/closedc.png";
+
+
 
 	flow.onCalculated(function (direction) {
-		direction.zones.sort((a,b)=>{
-			return a.y - b.y;
-		});
-		let maxVal = direction.zones[direction.zones.length -1].y;
-		let minVal = direction.zones[0].y;
-
-		let binWidth = (maxVal - minVal) / numBins;
-		movement = new Array();
-		for (let zone of direction.zones){
-			let index = Math.floor((zone.y) / binWidth);
-			if (movement[index] === undefined){
-				movement[index] = [];
-			} else {
-				movement[index].push(zone);
-			}
-		}
-
-		for (var i = 0; i < movement.length; i++) {
-			let bin = movement[i];
-			let numZones = bin.length;
-			let sumValue = 0;
-			for (let value of bin){
-				let v = Math.abs(Math.pow(value.u, 2) + Math.pow(value.v, 2));
-				sumValue += v;
-			}
-			movement[i] = sumValue / numZones;
-		}
-
+		x += direction.u;
+		if (x > 8) x = 8;
+		if (x < -8) x = -8;
 	});
 
 	flow.startCapture();
@@ -42,38 +53,20 @@ window.onload = function() {
 	function render(){
 		let w = ctx.canvas.width  = window.innerWidth;
 		let h = ctx.canvas.height = window.innerHeight;
-		let binWidth = w / numBins;
-		let max = Math.max.apply(null, movement);
-
-		let maxBinIndex = 0;
-		let maxBinValue = 0;
-
-		ctx.beginPath();
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = "#000";
-
-		for (let i = 0; i < numBins; i++) {
-			let x = i*binWidth;
-			ctx.moveTo(x,0);
-			ctx.lineTo(x,h);
-			
-			if (movement[i] === max){
-				maxBinIndex = i;
-			}
-
-			ctx.moveTo(x + binWidth / 2, 0);
-			ctx.lineTo(x + binWidth / 2, 2 * movement[i]);
+		
+		let value =  Math.round(x);
+		if (value === previousValue){
+			timeoutCount += 1;
+		}else{
+			timeoutCount = 0;
 		}
-		ctx.stroke();
-
-		ctx.beginPath();
-		ctx.strokeStyle = "#f00";
-		ctx.lineWidth = 10;
-		ctx.moveTo((maxBinIndex * binWidth) + binWidth / 2, 0);
-		ctx.lineTo((maxBinIndex * binWidth) + binWidth / 2, h);
-		ctx.stroke();
-
-
+		previousValue = value;		
+		
+		if (timeoutCount < timeout){
+			ctx.drawImage(images[value+8], 0, 0, w, h);
+		}else{
+			ctx.drawImage(closedEye, 0, 0, w, h);
+		}
 		requestAnimationFrame(render);
 	}
 	requestAnimationFrame(render);
