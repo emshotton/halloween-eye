@@ -38,7 +38,7 @@ window.onload = function() {
 
 
 	let closedEye = new Image();
-	closedEye.src = "./assets/images/closedc.png";
+	closedEye.src = "./assets/images/cclosed.png";
 
 
 
