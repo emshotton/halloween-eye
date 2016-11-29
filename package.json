@@ -4,7 +4,7 @@
   "description": "Object tracking giant eye.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/reload/bin/reload"
+    "test": "cp ./node_modules/oflow/dist/oflow.js src/oflow.js && ./node_modules/reload/bin/reload"
   },
   "repository": {
     "type": "git",
